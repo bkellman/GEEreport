@@ -49,6 +49,8 @@ parseSummary.GEEpack <- function(mod,odsig=3,logit=FALSE){
     }
     #effect size: marginal r^2 (Zheng 2000)
     mr2 = marginal_rsquared(mod,logit)
+    #effect size: marginal entropy (zheng,2000)
+    mh = ifelse(logit, marginal_entropy(mod),NA)
     #degrees of freedom
     df=mod$df.residual
     # anova (dQIC)
@@ -77,10 +79,10 @@ parseSummary.GEEpack <- function(mod,odsig=3,logit=FALSE){
 
     # gen table 
     xtab <- xtable(summary[,5:7])
-    #print(xtable(summary(res)))
+
     singlevars = data.frame(
-        stat=c('Number of observations','Number of Clusters','Marginal R^2','Degrees of Freedom',"Shapiro-Wilks P"),
-        value=c(observation_count,signif(group_count,odsig),signif(mr2,odsig),df,shapiro.wilks))
+        stat=c('Number of observations','Number of Clusters','Marginal R^2','Marginal Entropy','Degrees of Freedom',"Shapiro-Wilks P"),
+        value=c(observation_count,signif(group_count,odsig),signif(mr2,odsig),signif(mh,odsig),df,shapiro.wilks))
     xtab2<-xtable(singlevars)
 
     return(list(xtab,xtab2))
